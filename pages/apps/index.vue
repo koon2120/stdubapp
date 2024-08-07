@@ -13,10 +13,10 @@ const appList = ref([
 </script>
 
 <template>
-    <div class="mt-4 mb-4">
-        <h1 class="sarabun-extrabold">แอปต่างๆ : </h1>
+    <div class="mt-4 mb-4 text-center text-lg-start">
+        <h1 class="sarabun-extrabold">แอปต่างๆ</h1>
     </div>
-    <div class="row row-cols-auto g-4">
+    <div class="row row-cols-auto g-4 justify-content-center justify-content-lg-start">
         <div class="col" v-for="app in appList">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">

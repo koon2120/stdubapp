@@ -11,12 +11,12 @@ const RecommendedList = ref([
 </script>
 
 <template>
-    <div class="mt-4 mb-5">
+    <div class="mt-4 mb-5 text-center text-lg-start">
         <h1 class="sarabun-extrabold">สวัสดีคุณ {{ user.user_metadata.display_name }}!</h1>
         <p>วันนี้คุณต้องการทำอะไรไหม..?</p>
     </div>
-    <h3 class="sarabun-bold mb-4">ข้อมูลและการจัดการทั่วไป : </h3>
-    <div class="row row-cols-auto g-4 mb-5">
+    <h3 class="sarabun-bold mb-4 text-center text-lg-start">ข้อมูลและการจัดการทั่วไป</h3>
+    <div class="row row-cols-auto g-4 mb-5 justify-content-center justify-content-lg-start">
         <div class="col" v-for="recommended in RecommendedList">
             <div class="card" style="width: 18rem;">
                 <div class="card-body">

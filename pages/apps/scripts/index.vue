@@ -13,12 +13,12 @@ const { data: ScriptList, error: ScriptListError } = await useFetch('/api/script
 </script>
 
 <template>
-    <div class="mt-4 mb-3">
+    <div class="mt-4 mb-3 text-center text-lg-start">
         <h1 class="sarabun-extrabold">ยินดีต้อนรับสู่ ST Dub Script</h1>
         <p>คุณสามารถดูบทพากย์ได้ที่นี่!</p>
+        <NuxtLink type="button" class="btn btn-primary mb-5" to="/apps/scripts/create">สร้างบทพากย์</NuxtLink>
     </div>
-    <NuxtLink type="button" class="btn btn-primary mb-5" to="/apps/scripts/create">สร้างบทพากย์</NuxtLink>
-    <div class="row row-cols-auto g-4 mb-5">
+    <div class="row row-cols-auto g-4 mb-5 justify-content-center justify-content-lg-start">
         <div class="col" v-for="onceScript in ScriptList">
             <div class="card" style="width: 18rem;">
                 <img :src="onceScript.image ? onceScript.image : '/images/no-image.jpg'" class="card-img-top"

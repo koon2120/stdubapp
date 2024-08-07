@@ -1,6 +1,7 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
 const route = useRoute();
+const user = useSupabaseUser()
 
 if (route.query.id == undefined || route.query.id == false) {
   await navigateTo("/apps/scripts");
@@ -29,7 +30,12 @@ const { data: originalScript, error: originalScriptError } = await useFetch(
 if (originalScript.value.status == 404) {
   throw createError({
     statusCode: 404,
-    statusMessage: "Page Not Found",
+    statusMessage: "ไม่พบหน้านี้ หรือหน้านี้ถูกลบไปแล้ว",
+  });
+}else if (originalScript.value.data[0].user_id != user.value.id) {
+  throw createError({
+    statusCode: 403,
+    statusMessage: "คุณไม่ได้รับอนุญาตให้เข้าถึงหน้านี้",
   });
 }
 

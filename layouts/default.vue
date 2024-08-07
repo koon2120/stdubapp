@@ -25,7 +25,7 @@ const { data: profileImageUrl } = await useAsyncData('profileImageUrl', () => {
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <img src="/images/logo.png" alt="Logo" width="30" style="border-radius: 50%;" class="me-2">
-                <NuxtLink class="navbar-brand" href="/"><b>ST Dub App</b></NuxtLink>
+                <NuxtLink class="navbar-brand" to="/"><b>ST Dub App</b></NuxtLink>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -34,10 +34,10 @@ const { data: profileImageUrl } = await useAsyncData('profileImageUrl', () => {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <NuxtLink class="nav-link" aria-current="page" href="/">หน้าหลัก</NuxtLink>
+                            <NuxtLink class="nav-link" aria-current="page" to="/">หน้าหลัก</NuxtLink>
                         </li>
                         <li class="nav-item">
-                            <NuxtLink class="nav-link" href="/apps">แอปทั้งหมด</NuxtLink>
+                            <NuxtLink class="nav-link" to="/apps">แอปทั้งหมด</NuxtLink>
                         </li>
                         <li class="nav-item dropdown">
                             <NuxtLink class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
@@ -46,7 +46,7 @@ const { data: profileImageUrl } = await useAsyncData('profileImageUrl', () => {
                             </NuxtLink>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <NuxtLink class="dropdown-item" href="/information">ข้อมูลอื่นๆ
+                                    <NuxtLink class="dropdown-item" to="/information">ข้อมูลอื่นๆ
                                     </NuxtLink>
                                 </li>
                             </ul>
@@ -58,13 +58,13 @@ const { data: profileImageUrl } = await useAsyncData('profileImageUrl', () => {
                             </NuxtLink>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <NuxtLink class="dropdown-item" href="/projects">โปรเจกต์ทั้งหมด</NuxtLink>
+                                    <NuxtLink class="dropdown-item" to="/projects">โปรเจกต์ทั้งหมด</NuxtLink>
                                 </li>
                                 <li>
-                                    <NuxtLink class="dropdown-item" href="/projects/create">สร้างโปรเจกต์</NuxtLink>
+                                    <NuxtLink class="dropdown-item" to="/projects/create">สร้างโปรเจกต์</NuxtLink>
                                 </li>
                                 <li>
-                                    <NuxtLink class="dropdown-item" href="/projects/request">เสนอโปรเจกต์
+                                    <NuxtLink class="dropdown-item" to="/projects/request">เสนอโปรเจกต์
                                     </NuxtLink>
                                 </li>
                             </ul>
@@ -76,23 +76,7 @@ const { data: profileImageUrl } = await useAsyncData('profileImageUrl', () => {
                             </NuxtLink>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <NuxtLink class="dropdown-item" href="/help/forgot-password">ลืมรหัสผ่าน</NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink class="dropdown-item" href="/help/cannot-signin">ไม่สามารถเข้าสู่ระบบได้
-                                    </NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink class="dropdown-item" href="/help/cannot-signup">ไม่สามารถสมัครสมาชิกได้
-                                    </NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink class="dropdown-item" href="/help/cannot-use">ไม่สามารถใช้งานได้
-                                    </NuxtLink>
-                                </li>
-                                <li>
-                                    <NuxtLink class="dropdown-item" href="/help/something-error">เกิดข้อผิดพลาดอื่นๆ
-                                    </NuxtLink>
+                                    <NuxtLink class="dropdown-item" to="https://docs.stdubteam.online/" target="_blank">เอกสาร</NuxtLink>
                                 </li>
                             </ul>
                         </li>
@@ -106,7 +90,7 @@ const { data: profileImageUrl } = await useAsyncData('profileImageUrl', () => {
                         </NuxtLink>
                         <ul class="dropdown-menu dropdown-menu-lg-end">
                             <li>
-                                <NuxtLink class="dropdown-item" href="/account/manage">จัดการบัญชี</NuxtLink>
+                                <NuxtLink class="dropdown-item" to="/account/manage">จัดการบัญชี</NuxtLink>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">

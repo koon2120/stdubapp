@@ -57,6 +57,7 @@ const onScriptDelete = async () => {
   if (error.value) {
     console.error(error.value);
   } else {
+    $("#WarningDeleteScriptModal").modal("hide");
     navigateTo("/apps/scripts");
   }
 };
@@ -136,10 +137,53 @@ const onScriptDelete = async () => {
         <button
           v-show="viewScript.data[0].user_id == user.id"
           class="btn btn-outline-danger"
-          @click="onScriptDelete"
+          data-bs-toggle="modal" 
+          data-bs-target="#WarningDeleteScriptModal"
         >
           ลบ
         </button>
+      </div>
+    </div>
+  </div>
+    <!-- WarningDeleteScriptModal -->
+    <div
+    class="modal fade"
+    id="WarningDeleteScriptModal"
+    tabindex="-1"
+    aria-labelledby="WarningDeleteScriptModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1
+            class="modal-title fs-5 sarabun-extrabold"
+            id="WarningDeleteScriptModal"
+          >
+            คำเตือน
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          คุณแน่ใจหรือไม่ว่าจะลบบทพากย์นี้?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="onScriptDelete"
+          >
+            ยืนยัน
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            ยกเลิก
+          </button>
+        </div>
       </div>
     </div>
   </div>

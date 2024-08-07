@@ -13,7 +13,7 @@ const { data: Information, error: InformationError } = await useFetch('/api/info
 
 <template>
     <div class="mt-5 mb-5">
-        <h1 class="sarabun-extrabold text-center">ข้อมูลทั่วไปเกี่ยวกับ ST Dub Team</h1>
+        <h1 class="sarabun-extrabold text-center text-lg-start">ข้อมูลทั่วไปเกี่ยวกับ ST Dub Team</h1>
     </div>
     <div class="table-responsive">
         <table class="table">

@@ -85,7 +85,6 @@ const formatDate = (date) => {
                     <th scope="col">ชื่อไฟล์</th>
                     <th scope="col">ชนิดไฟล์</th>
                     <th scope="col">สร้างเมื่อ</th>
-                    <th scope="col">แก้ไขล่าสุดเมื่อ</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -96,7 +95,6 @@ const formatDate = (date) => {
                     <td>{{ file.name }}</td>
                     <td>{{ file.metadata.mimetype }}</td>
                     <td>{{ formatDate(file.created_at) }}</td>
-                    <td>{{ formatDate(file.updated_at) }}</td>
                     <td><button class="btn btn-primary btn-sm" @click="onFileUrlCopy(file.name)">คัดลอกลิงก์</button>
                     </td>
                     <td><button class="btn btn-danger btn-sm" @click="onFileRemove(file.name)">ลบไฟล์</button></td>
