@@ -7,6 +7,11 @@ useSeoMeta({
 });
 
 const errorMessage = ref(false);
+
+const closeErrorMessage = () => {
+  errorMessage.value = false
+}
+
 const projectInfo = ref({
   title: "",
   description: "",
@@ -80,8 +85,9 @@ const createNewProject = async () => {
 </script>
 
 <template>
-  <div class="alert alert-danger mt-3" role="alert" v-show="errorMessage">
+  <div class="alert alert-warning alert-dismissible mt-3" role="alert" v-show="errorMessage">
     {{ errorMessage }}
+    <button type="button" class="btn-close" @click="closeErrorMessage"></button>
   </div>
   <div class="mt-4 mb-4">
     <h1 class="sarabun-extrabold">สร้างโปรเจกต์</h1>

@@ -65,12 +65,12 @@ const onScriptDelete = async () => {
 <template>
   <div>
     <div class="row justify-content-center mt-5">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <img
           :src="
             viewScript.data[0].image ? viewScript.data[0].image : '/images/no-image.jpg'
           "
-          class="img-fluid"
+          class="img-fluid d-block mx-auto"
           width="500px"
         />
       </div>

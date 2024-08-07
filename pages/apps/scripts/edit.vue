@@ -11,7 +11,11 @@ useSeoMeta({
   ogTitle: `แก้ไขบทพากย์ - ${runtimeConfig.public.SiteName}`,
 });
 
-const errorMessage = ref(false)
+const errorMessage = ref(false);
+
+const closeErrorMessage = () => {
+  errorMessage.value = false;
+};
 
 const { data: originalScript, error: originalScriptError } = await useFetch(
   "/api/scripts",
@@ -135,6 +139,16 @@ const removeScript = (id) => {
   scriptList.value.splice(id, 1);
 };
 
+const onScriptChangePatition = (id, patition) => {
+  if (patition == "up") {
+    let result = scriptList.value.splice(id, 1);
+    scriptList.value.splice(id - 1, 0, result[0]);
+  } else if (patition == "down") {
+    let result = scriptList.value.splice(id, 1);
+    scriptList.value.splice(id + 1, 0, result[0]);
+  }
+};
+
 const createNewScript = async () => {
   if (
     scriptInfo.value.title.length == 0 ||
@@ -167,6 +181,10 @@ const createNewScript = async () => {
 </script>
 
 <template>
+  <div v-show="errorMessage" class="alert alert-warning alert-dismissible mt-3">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" @click="closeErrorMessage"></button>
+  </div>
   <div class="mt-4 mb-4">
     <h1 class="sarabun-extrabold">สร้างบทพากย์</h1>
   </div>
@@ -282,6 +300,32 @@ const createNewScript = async () => {
                 @click="removeScript(index)"
               >
                 ลบ
+              </button>
+            </div>
+            <div class="col-auto ps-1 pe-1">
+              <button
+                :class="{
+                  btn: true,
+                  'btn-secondary': true,
+                  'btn-sm': true,
+                  disabled: scriptList.length - scriptList.length == index,
+                }"
+                @click="onScriptChangePatition(index, 'up')"
+              >
+                เลื่อนขึ้น
+              </button>
+            </div>
+            <div class="col-auto ps-1 pe-1">
+              <button
+                :class="{
+                  btn: true,
+                  'btn-secondary': true,
+                  'btn-sm': true,
+                  disabled: scriptList.length - 1 == index,
+                }"
+                @click="onScriptChangePatition(index, 'down')"
+              >
+                เลื่อนลง
               </button>
             </div>
           </div>

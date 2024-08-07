@@ -63,6 +63,11 @@ async function onFileRemove(filename) {
         ListFileRefresh()
     }
 }
+
+const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('th-TH',{year: 'numeric', month: 'long', day: 'numeric',weekday: 'long',hour:'numeric',minute:'numeric',second:'numeric'})
+}
+
 </script>
 
 <template>
@@ -90,8 +95,8 @@ async function onFileRemove(filename) {
                     <th scope="row">{{ index + 1 }}</th>
                     <td>{{ file.name }}</td>
                     <td>{{ file.metadata.mimetype }}</td>
-                    <td>{{ file.created_at }}</td>
-                    <td>{{ file.updated_at }}</td>
+                    <td>{{ formatDate(file.created_at) }}</td>
+                    <td>{{ formatDate(file.updated_at) }}</td>
                     <td><button class="btn btn-primary btn-sm" @click="onFileUrlCopy(file.name)">คัดลอกลิงก์</button>
                     </td>
                     <td><button class="btn btn-danger btn-sm" @click="onFileRemove(file.name)">ลบไฟล์</button></td>
