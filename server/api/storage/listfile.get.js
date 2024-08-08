@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
     .list(user.id, {
       limit: 100,
       offset: 0,
-      sortBy: { column: "name", order: "asc" },
+      sortBy: { column: "created_at", order: "asc" },
     });
   if (error) {
     return error;

@@ -115,6 +115,10 @@ const formatDate = (date) => {
                     <div class="alert alert-danger" role="alert" v-show="onCreateNewFIleErrorMessage">
                         {{ onCreateNewFIleErrorMessage }}
                     </div>
+                    <div class="alert alert-info" role="alert">
+                            - สามารถอัปโหลดได้แค่ไฟล์ชนิด png, jpg เท่านั้น<br>
+                            - ขนาดไฟล์ต้องไม่เกิน 5 MB
+                        </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">เลือกไฟล์ : </label>
                         <input class="form-control" type="file" id="formFile" accept="image/png, image/jpeg"

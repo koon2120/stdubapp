@@ -5,7 +5,7 @@ export default eventHandler(async (event) => {
   if (getQuery(event).id == undefined) {
     const { data, error } = await supabase
       .from("projects")
-      .select()
+      .select("id,title,description,image,user_id,created_at")
       .order("id", { ascending: true });
     if (error) {
       return error;
