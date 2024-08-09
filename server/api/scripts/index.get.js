@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
     const { data, error } = await supabase
       .from("scripts")
       .select("id,title,image,user_id,created_at")
-      .order("id", { ascending: true });
+      .order("id", { ascending: false });
     if (error) {
       return error;
     } else {
