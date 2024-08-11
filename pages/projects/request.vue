@@ -1,6 +1,7 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
 const user = useSupabaseUser();
+const supabase = useSupabaseClient();
 
 useSeoMeta({
   title: `เสนอโปรเจกต์ - ${runtimeConfig.public.SiteName}`,
@@ -11,15 +12,22 @@ const newProjectRequest = ref({
   description: "",
 });
 const errorMessage = ref(false);
-
 const {
   data: ProjectRequestList,
-  error: ProjectRequestListError,
   refresh: ProjectRequestListRefresh,
-} = await useFetch("/api/projects/request", {
-  headers: useRequestHeaders(["cookie"]),
-  method: "get",
+} = await useAsyncData(async () => {
+  return await supabase
+    .from("projects-request")
+    .select()
+    .order("id", { ascending: true });
 });
+
+if (ProjectRequestList.value.error) {
+  throw createError({
+    statusCode: 500,
+    statusMessage: "เกิดปัญหาบางอย่างบน Server โปรดติดต่อผู้ดูแลระบบ",
+  });
+}
 
 const addProjectRequest = async () => {
   errorMessage.value = false;
@@ -28,13 +36,19 @@ const addProjectRequest = async () => {
     newProjectRequest.value.description.length != 0
   ) {
     let newProjectRequestObject = newProjectRequest.value;
-    const { error } = await useFetch("/api/projects/request", {
-      headers: useRequestHeaders(["cookie"]),
-      method: "post",
-      query: newProjectRequestObject,
-    });
-    newProjectRequest.value = { title: "", description: "" };
-    $("#addProjectRequest").modal("hide");
+    const { error } = await supabase
+    .from("projects-request")
+    .insert({
+      title: newProjectRequestObject.title,
+      description: newProjectRequestObject.description,
+      user_id: user.value.id,
+    })
+    if (error) {
+      errorMessage.value = error.message
+    }else {
+      newProjectRequest.value = { title: "", description: "" };
+      $("#addProjectRequest").modal("hide");
+    }
   } else {
     errorMessage.value = "โปรดใส่ข้อมูลให้ครบ";
   }
@@ -42,11 +56,10 @@ const addProjectRequest = async () => {
 };
 
 const deleteProjectRequest = async (id) => {
-  const { error } = await useFetch("/api/projects/request", {
-    headers: useRequestHeaders(["cookie"]),
-    method: "delete",
-    query: { id: id },
-  });
+  const { error } = await supabase
+    .from("projects-request")
+    .delete()
+    .eq("id", id);
   if (error) {
     console.error(error);
   }
@@ -73,7 +86,7 @@ const deleteProjectRequest = async (id) => {
     <div
       class="row row-cols-auto g-4 mb-5 justify-content-center justify-content-lg-start"
     >
-      <div class="col-md-4" v-for="project in ProjectRequestList">
+      <div class="col-md-4" v-for="project in ProjectRequestList.data">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title sarabun-bold">{{ project.title }}</h5>

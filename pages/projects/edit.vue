@@ -1,7 +1,8 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
 const route = useRoute();
-const user = useSupabaseUser()
+const user = useSupabaseUser();
+const supabase = useSupabaseClient();
 
 if (route.query.id == undefined || route.query.id == false) {
   await navigateTo("/projects");
@@ -13,7 +14,6 @@ useSeoMeta({
 });
 
 const errorMessage = ref(false);
-
 const closeErrorMessage = () => {
   errorMessage.value = false;
 };
@@ -31,21 +31,22 @@ const editMemberModal = ref({
   role: "",
 });
 
-const { data: originalProject, error: originalProjectError } = await useFetch(
-  "/api/projects",
-  {
-    headers: useRequestHeaders(["cookie"]),
-    method: "get",
-    query: { id: route.query.id },
-  }
-);
+const { data: originalProject, error: originalProjectError } = await supabase
+  .from("projects")
+  .select()
+  .eq("id", route.query.id);
 
-if (originalProject.value.status == 404) {
+if (originalProjectError) {
+  throw createError({
+    statusCode: 500,
+    statusMessage: "เกิดปัญหาบางอย่างบน Server โปรดติดต่อผู้ดูแลระบบ",
+  });
+}else if (originalProject[0].length == 0) {
   throw createError({
     statusCode: 404,
     statusMessage: "ไม่พบหน้านี้ หรือหน้านี้ถูกลบไปแล้ว",
   });
-}else if (originalProject.value.data[0].user_id != user.value.id) {
+} else if (originalProject[0].user_id != user.value.id) {
   throw createError({
     statusCode: 403,
     statusMessage: "คุณไม่ได้รับอนุญาตให้เข้าถึงหน้านี้",
@@ -53,12 +54,12 @@ if (originalProject.value.status == 404) {
 }
 
 projectInfo.value = {
-  title: originalProject.value.data[0].title,
-  description: originalProject.value.data[0].description,
-  image: originalProject.value.data[0].image,
+  title: originalProject[0].title,
+  description: originalProject[0].description,
+  image: originalProject[0].image,
 };
 
-memberList.value = originalProject.value.data[0].members;
+memberList.value = originalProject[0].members;
 
 const addMember = () => {
   memberList.value.push({
@@ -106,14 +107,18 @@ const createNewProject = async () => {
       image: projectInfo.value.image,
       members: memberList.value,
     };
-    const { error } = await useFetch("/api/projects", {
-      headers: useRequestHeaders(["cookie"]),
-      method: "put",
-      query: { id: originalProject.value.data[0].id },
-      body: finalScript,
-    });
-    if (error.value) {
-      console.error(error.value);
+    const { error } = await supabase
+      .from("projects")
+      .update({
+        title: finalScript.title,
+        description: finalScript.description,
+        image: finalScript.image,
+        members: finalScript.members,
+        user_id: user.value.id,
+      })
+      .eq("id", route.query.id);
+    if (error) {
+      console.error(error);
     } else {
       navigateTo("/projects");
     }

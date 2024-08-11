@@ -1,18 +1,23 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
+const supabase = useSupabaseClient();
 
 useSeoMeta({
   title: `โปรเจกต์ - ${runtimeConfig.public.SiteName}`,
   ogTitle: `โปรเจกต์  - ${runtimeConfig.public.SiteName}`,
 });
 
-const { data: ProjectList, error: ProjectListError } = await useFetch(
-  "/api/projects",
-  {
-    headers: useRequestHeaders(["cookie"]),
-    method: "get",
-  }
-);
+const { data: ProjectList, error: ProjectListError } = await supabase
+  .from("projects")
+  .select("id,title,description,image,user_id,created_at")
+  .order("id", { ascending: false });
+
+if (ProjectListError) {
+  throw createError({
+    statusCode: 500,
+    statusMessage: "เกิดปัญหาบางอย่างบน Server โปรดติดต่อผู้ดูแลระบบ",
+  });
+}
 </script>
 
 <template>
@@ -33,7 +38,9 @@ const { data: ProjectList, error: ProjectListError } = await useFetch(
         >เสนอโปรเจกต์</NuxtLink
       >
     </div>
-    <div class="row row-cols-auto g-4 mb-5 justify-content-center justify-content-lg-start">
+    <div
+      class="row row-cols-auto g-4 mb-5 justify-content-center justify-content-lg-start"
+    >
       <div class="col" v-for="project in ProjectList">
         <div class="card" style="width: 18rem">
           <img

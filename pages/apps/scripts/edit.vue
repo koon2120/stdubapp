@@ -1,7 +1,8 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
 const route = useRoute();
-const user = useSupabaseUser()
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 
 if (route.query.id == undefined || route.query.id == false) {
   await navigateTo("/apps/scripts");
@@ -18,24 +19,25 @@ const closeErrorMessage = () => {
   errorMessage.value = false;
 };
 
-const { data: originalScript, error: originalScriptError } = await useFetch(
-  "/api/scripts",
-  {
-    headers: useRequestHeaders(["cookie"]),
-    method: "get",
-    query: { id: route.query.id },
-  }
-);
+const { data: originalScript, error: originalScriptError } = await supabase
+  .from("scripts")
+  .select()
+  .eq("id", route.query.id);
 
-if (originalScript.value.status == 404) {
+if (originalScript.length == 0) {
   throw createError({
     statusCode: 404,
     statusMessage: "ไม่พบหน้านี้ หรือหน้านี้ถูกลบไปแล้ว",
   });
-}else if (originalScript.value.data[0].user_id != user.value.id) {
+} else if (originalScript[0].user_id != user.value.id) {
   throw createError({
     statusCode: 403,
     statusMessage: "คุณไม่ได้รับอนุญาตให้เข้าถึงหน้านี้",
+  });
+} else if (originalScriptError) {
+  throw createError({
+    statusCode: 500,
+    statusMessage: "เกิดปัญหาบางอย่างบน Server โปรดติดต่อผู้ดูแลระบบ",
   });
 }
 
@@ -46,9 +48,9 @@ const scriptInfo = ref({
 });
 
 scriptInfo.value = {
-  title: originalScript.value.data[0].title,
-  image: originalScript.value.data[0].image,
-  youtube_video: originalScript.value.data[0].youtube_video,
+  title: originalScript[0].title,
+  image: originalScript[0].image,
+  youtube_video: originalScript[0].youtube_video,
 };
 
 const characterList = ref([]);
@@ -60,7 +62,7 @@ const editCharacterModal = ref({
 
 const pendingCharacterRemove = ref(null);
 
-characterList.value = originalScript.value.data[0].character;
+characterList.value = originalScript[0].character;
 
 const addCharacter = () => {
   characterList.value.push({ name: `ตัวละครใหม่`, image: "" });
@@ -118,7 +120,7 @@ const editScriptModal = ref({
   message: "",
 });
 
-scriptList.value = originalScript.value.data[0].scripts;
+scriptList.value = originalScript[0].scripts;
 
 const addScript = () => {
   scriptList.value.push({ character_id: 0, message: "ข้อความใหม่" });
@@ -171,14 +173,19 @@ const createNewScript = async () => {
       character: characterList.value,
       scripts: scriptList.value,
     };
-    const { error } = await useFetch("/api/scripts", {
-      headers: useRequestHeaders(["cookie"]),
-      method: "put",
-      query: { id: originalScript.value.data[0].id },
-      body: finalScript,
-    });
-    if (error.value) {
-      console.error(error.value);
+    const { error } = await supabase
+      .from("scripts")
+      .update({
+        title: finalScript.title,
+        image: finalScript.image,
+        youtube_video: finalScript.youtube_video,
+        character: finalScript.character,
+        scripts: finalScript.scripts,
+        user_id: user.value.id,
+      })
+      .eq("id", route.query.id);
+    if (error) {
+      console.error(error);
     } else {
       navigateTo("/apps/scripts");
     }

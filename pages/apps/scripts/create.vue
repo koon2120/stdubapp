@@ -1,5 +1,7 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
+const supabase = useSupabaseClient();
+const user = useSupabaseUser();
 
 useSeoMeta({
   title: `สร้างบทพากย์ - ${runtimeConfig.public.SiteName}`,
@@ -9,8 +11,8 @@ useSeoMeta({
 const errorMessage = ref(false);
 
 const closeErrorMessage = () => {
-  errorMessage.value = false
-}
+  errorMessage.value = false;
+};
 
 const scriptInfo = ref({
   title: "",
@@ -134,13 +136,16 @@ const createNewScript = async () => {
       character: characterList.value,
       scripts: scriptList.value,
     };
-    const { error } = await useFetch("/api/scripts", {
-      headers: useRequestHeaders(["cookie"]),
-      method: "post",
-      body: finalScript,
+    const { error } = await supabase.from("scripts").insert({
+      title: finalScript.title,
+      image: finalScript.image,
+      youtube_video: finalScript.youtube_video,
+      character: finalScript.character,
+      scripts: finalScript.scripts,
+      user_id: user.value.id,
     });
-    if (error.value) {
-      console.error(error.value);
+    if (error) {
+      console.error(error);
     } else {
       navigateTo("/apps/scripts");
     }

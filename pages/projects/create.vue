@@ -1,5 +1,7 @@
 <script setup>
 const runtimeConfig = useRuntimeConfig();
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
 
 useSeoMeta({
   title: `สร้างโปรเจกต์ - ${runtimeConfig.public.SiteName}`,
@@ -7,7 +9,6 @@ useSeoMeta({
 });
 
 const errorMessage = ref(false);
-
 const closeErrorMessage = () => {
   errorMessage.value = false
 }
@@ -70,13 +71,17 @@ const createNewProject = async () => {
       image: projectInfo.value.image,
       members: memberList.value,
     };
-    const { error } = await useFetch("/api/projects", {
-      headers: useRequestHeaders(["cookie"]),
-      method: "post",
-      body: finalScript,
-    });
-    if (error.value) {
-      console.error(error.value)
+    const { error } = await supabase
+    .from("projects")
+    .insert({
+      title:finalScript.title,
+      description:finalScript.description,
+      image:finalScript.image,
+      members:finalScript.members,
+      user_id:user.value.id
+    })
+    if (error) {
+      console.error(error)
     }else {
       navigateTo('/projects')
     }
